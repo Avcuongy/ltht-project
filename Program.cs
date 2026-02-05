@@ -10,6 +10,8 @@ namespace ltht_project
     {
         static void Main(string[] args)
         {
+
+            Console.ReadKey();
         }
     }
 }

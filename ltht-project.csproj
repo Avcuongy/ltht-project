@@ -43,7 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\BackgroundWorker.cs" />
+    <Compile Include="Core\FileRegistry.cs" />
+    <Compile Include="Core\FileWatcherService.cs" />
+    <Compile Include="Gui\Menu.cs" />
+    <Compile Include="Infrastructure\IKPICalculator.cs" />
+    <Compile Include="Infrastructure\KPIEngine.cs" />
+    <Compile Include="Model\Invoice.cs" />
+    <Compile Include="Model\PurchaseOrder.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />
+    <Compile Include="Model\ProductStats.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -56,13 +65,9 @@
     <Content Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App\" />
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
     <Folder Include="obj\Debug\TempPE\" />
-    <Folder Include="Src\Core\" />
-    <Folder Include="Src\Infrastructure\" />
-    <Folder Include="Src\Model\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
