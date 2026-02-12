@@ -58,6 +58,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Data\invoices.json" />
+    <None Include="Data\purchase_orders.json" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
     <None Include="obj\Debug\ltht-project.csproj.AssemblyReference.cache" />
   </ItemGroup>
