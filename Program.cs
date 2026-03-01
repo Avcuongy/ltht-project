@@ -8,8 +8,11 @@ namespace ltht_project
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            Console.OutputEncoding = Encoding.UTF8;
+
+            await Test.RunTestAsync();
 
             Console.ReadKey();
         }

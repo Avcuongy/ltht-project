@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ltht_project.gui
 {
-    internal class Menu
+    public class Menu
     {
 
     }
