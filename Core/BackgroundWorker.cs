@@ -22,6 +22,8 @@ namespace ltht_project.Infrastructure
         private readonly int workerCount;
         private bool isRunning;
 
+        public event EventHandler<FileProcessedEventArgs> FileProcessed;
+
         public BackgroundWorker(FileWatcherService watcher, FileRegistry registry, KPIEngine engine, int workerCount = 2)
         {
             fileWatcher = watcher;
@@ -41,7 +43,7 @@ namespace ltht_project.Infrastructure
             }
 
             isRunning = true;
-            
+
             for (int i = 0; i < workerCount; i++)
             {
                 var task = Task.Run(() => ProcessFilesAsync(cancellationTokenSource.Token), cancellationTokenSource.Token);
@@ -121,28 +123,34 @@ namespace ltht_project.Infrastructure
                 if (string.IsNullOrWhiteSpace(json))
                 {
                     fileRegistry.MarkAsFailed(filePath, "Empty file");
+                    OnFileProcessed(new FileProcessedEventArgs(filePath, false, 0, "Empty file"));
                     return;
                 }
 
+                int recordCount = 0;
+
                 if (filePath.Contains("invoice"))
                 {
-                    await ProcessInvoicesAsync(json, filePath);
+                    recordCount = await ProcessInvoicesAsync(json, filePath);
                 }
                 else if (filePath.Contains("purchase-order"))
                 {
-                    await ProcessPurchaseOrdersAsync(json, filePath);
+                    recordCount = await ProcessPurchaseOrdersAsync(json, filePath);
                 }
                 else
                 {
                     fileRegistry.MarkAsFailed(filePath, "Unknown file type");
+                    OnFileProcessed(new FileProcessedEventArgs(filePath, false, 0, "Unknown file type"));
                     return;
                 }
 
                 fileRegistry.MarkAsSuccess(filePath);
+                OnFileProcessed(new FileProcessedEventArgs(filePath, true, recordCount, null));
             }
             catch (Exception ex)
             {
                 fileRegistry.MarkAsFailed(filePath, ex.Message);
+                OnFileProcessed(new FileProcessedEventArgs(filePath, false, 0, ex.Message));
             }
         }
 
@@ -155,9 +163,9 @@ namespace ltht_project.Infrastructure
             }
         }
 
-        private async Task ProcessInvoicesAsync(string json, string filePath)
+        private async Task<int> ProcessInvoicesAsync(string json, string filePath)
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
                 var invoices = JsonSerializer.Deserialize<List<Invoice>>(json);
 
@@ -173,12 +181,14 @@ namespace ltht_project.Infrastructure
                         kpiEngine.ProcessInvoice(invoice);
                     }
                 }
+
+                return invoices.Count;
             });
         }
 
-        private async Task ProcessPurchaseOrdersAsync(string json, string filePath)
+        private async Task<int> ProcessPurchaseOrdersAsync(string json, string filePath)
         {
-            await Task.Run(() =>
+            return await Task.Run(() =>
             {
                 var orders = JsonSerializer.Deserialize<List<PurchaseOrder>>(json);
 
@@ -194,7 +204,14 @@ namespace ltht_project.Infrastructure
                         kpiEngine.ProcessPurchaseOrder(order);
                     }
                 }
+
+                return orders.Count;
             });
+        }
+
+        protected virtual void OnFileProcessed(FileProcessedEventArgs e)
+        {
+            FileProcessed?.Invoke(this, e);
         }
 
         public int GetQueueSize()
@@ -203,5 +220,23 @@ namespace ltht_project.Infrastructure
         }
 
         public bool IsRunning => isRunning;
+    }
+
+    internal class FileProcessedEventArgs : EventArgs
+    {
+        public string FilePath { get; }
+        public bool Success { get; }
+        public int RecordCount { get; }
+        public string ErrorMessage { get; }
+        public DateTime ProcessedTime { get; }
+
+        public FileProcessedEventArgs(string filePath, bool success, int recordCount, string errorMessage)
+        {
+            FilePath = filePath;
+            Success = success;
+            RecordCount = recordCount;
+            ErrorMessage = errorMessage;
+            ProcessedTime = DateTime.Now;
+        }
     }
 }

@@ -26,4 +26,5 @@ packages/
 *.pdb
 instrution.md
 summary.md
+gui.md
 Test.cs
