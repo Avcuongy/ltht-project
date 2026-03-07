@@ -13,7 +13,6 @@ namespace ltht_project.Infrastructure
         private readonly ConcurrentQueue<string> fileQueue;
         private readonly FileRegistry fileRegistry;
         private bool isRunning;
-
         public event EventHandler<FileDetectedEventArgs> FileDetected;
 
         public FileWatcherService(FileRegistry registry)
