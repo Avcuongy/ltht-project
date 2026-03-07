@@ -74,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\BackgroundWorker.cs" />
+    <Compile Include="Core\FileDectectedEventArgs.cs" />
+    <Compile Include="Core\FileProcessedEventArgs.cs" />
+    <Compile Include="Core\FileProcessingRecord.cs" />
     <Compile Include="Core\FileRegistry.cs" />
     <Compile Include="Core\FileWatcherService.cs" />
     <Compile Include="Gui.cs" />
@@ -85,9 +88,9 @@
     <Compile Include="Model\ProductStats.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="2_thiet_ke_kien_truc.md" />
     <None Include="App.config" />
     <None Include="data\invoices\invoices.20260103_02.json" />
     <None Include="data\invoices\invoices_20260103_01.json" />

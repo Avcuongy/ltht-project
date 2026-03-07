@@ -21,7 +21,6 @@ namespace ltht_project.Infrastructure
         private readonly List<Task> workerTasks;
         private readonly int workerCount;
         private bool isRunning;
-
         public event EventHandler<FileProcessedEventArgs> FileProcessed;
 
         public BackgroundWorker(FileWatcherService watcher, FileRegistry registry, KPIEngine engine, int workerCount = 2)
@@ -220,23 +219,5 @@ namespace ltht_project.Infrastructure
         }
 
         public bool IsRunning => isRunning;
-    }
-
-    internal class FileProcessedEventArgs : EventArgs
-    {
-        public string FilePath { get; }
-        public bool Success { get; }
-        public int RecordCount { get; }
-        public string ErrorMessage { get; }
-        public DateTime ProcessedTime { get; }
-
-        public FileProcessedEventArgs(string filePath, bool success, int recordCount, string errorMessage)
-        {
-            FilePath = filePath;
-            Success = success;
-            RecordCount = recordCount;
-            ErrorMessage = errorMessage;
-            ProcessedTime = DateTime.Now;
-        }
     }
 }

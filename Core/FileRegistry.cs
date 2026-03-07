@@ -4,21 +4,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+using ltht_project.Core;
 
 namespace ltht_project.Infrastructure
 {
-    internal class FileProcessingRecord
-    {
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
-        public string Checksum { get; set; }
-        public DateTime ProcessedDate { get; set; }
-        public ProcessingStatus Status { get; set; }
-        public string ErrorMessage { get; set; }
-    }
     internal enum ProcessingStatus
     {
         Processing,

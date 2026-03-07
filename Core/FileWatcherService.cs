@@ -2,10 +2,8 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using ltht_project.Core;
 
 namespace ltht_project.Infrastructure
 {
@@ -174,18 +172,6 @@ namespace ltht_project.Infrastructure
             }
 
             watchers.Clear();
-        }
-    }
-
-    internal class FileDetectedEventArgs : EventArgs
-    {
-        public string FilePath { get; }
-        public DateTime DetectedTime { get; }
-
-        public FileDetectedEventArgs(string filePath)
-        {
-            FilePath = filePath;
-            DetectedTime = DateTime.Now;
         }
     }
 }
