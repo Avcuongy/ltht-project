@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ltht_project.Model;
 
-namespace ltht_project.Core
+namespace ltht_project.Engine
 {
     internal class KPIEngine : IKPICalculator
     {
