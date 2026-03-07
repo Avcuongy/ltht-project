@@ -82,12 +82,12 @@
     <Compile Include="Model\ProductStats.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Infrastruture\BackgroundWorker.cs" />
-    <Compile Include="Infrastruture\FileDectectedEventArgs.cs" />
-    <Compile Include="Infrastruture\FileProcessedEventArgs.cs" />
-    <Compile Include="Infrastruture\FileProcessingRecord.cs" />
-    <Compile Include="Infrastruture\FileRegistry.cs" />
-    <Compile Include="Infrastruture\FileWatcherService.cs" />
+    <Compile Include="Infrastructure\BackgroundWorker.cs" />
+    <Compile Include="Infrastructure\FileDectectedEventArgs.cs" />
+    <Compile Include="Infrastructure\FileProcessedEventArgs.cs" />
+    <Compile Include="Infrastructure\FileProcessingRecord.cs" />
+    <Compile Include="Infrastructure\FileRegistry.cs" />
+    <Compile Include="Infrastructure\FileWatcherService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.md" />
