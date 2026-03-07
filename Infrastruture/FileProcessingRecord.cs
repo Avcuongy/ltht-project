@@ -1,7 +1,7 @@
 ﻿using System;
 using ltht_project.Infrastructure;
 
-namespace ltht_project.Core
+namespace ltht_project.Infrastructure
 {
     internal class FileProcessingRecord
     {

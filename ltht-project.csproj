@@ -73,15 +73,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\BackgroundWorker.cs" />
-    <Compile Include="Core\FileDectectedEventArgs.cs" />
-    <Compile Include="Core\FileProcessedEventArgs.cs" />
-    <Compile Include="Core\FileProcessingRecord.cs" />
-    <Compile Include="Core\FileRegistry.cs" />
-    <Compile Include="Core\FileWatcherService.cs" />
+    <Compile Include="Infrastruture\BackgroundWorker.cs" />
+    <Compile Include="Infrastruture\FileDectectedEventArgs.cs" />
+    <Compile Include="Infrastruture\FileProcessedEventArgs.cs" />
+    <Compile Include="Infrastruture\FileProcessingRecord.cs" />
+    <Compile Include="Infrastruture\FileRegistry.cs" />
+    <Compile Include="Infrastruture\FileWatcherService.cs" />
     <Compile Include="Gui.cs" />
-    <Compile Include="Infrastructure\IKPICalculator.cs" />
-    <Compile Include="Infrastructure\KPIEngine.cs" />
+    <Compile Include="Core\IKPICalculator.cs" />
+    <Compile Include="Core\KPIEngine.cs" />
     <Compile Include="Model\Invoice.cs" />
     <Compile Include="Model\PurchaseOrder.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cs" />

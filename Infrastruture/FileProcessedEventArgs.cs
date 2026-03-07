@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ltht_project.Core
+namespace ltht_project.Infrastructure
 {
     internal class FileProcessedEventArgs : EventArgs
     {
