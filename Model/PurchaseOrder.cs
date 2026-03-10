@@ -6,11 +6,12 @@ namespace ltht_project.Model
 {
     internal class PurchaseOrder
     {
-        private string orderId;
-        private string productId;
-        private int quantity;
-        private decimal unitCost;
-        private DateTime purchaseDate;
+        private string orderId;   // Mã đơn hàng
+        private string productId;   // Mã sản phẩm
+        private int quantity;   // Số lượng mua
+        private decimal unitCost;   // Đơn giá mua
+        private DateTime purchaseDate;   // Ngày nhập hàng
+
         [JsonConstructor]
         public PurchaseOrder(string orderId, string productId, int quantity, decimal unitCost, DateTime purchaseDate)
         {

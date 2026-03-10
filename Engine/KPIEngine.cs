@@ -1,16 +1,17 @@
-﻿using System;
+﻿using ltht_project.Model;
+using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ltht_project.Model;
 
 namespace ltht_project.Engine
 {
     internal class KPIEngine : IKPICalculator
     {
-        private ConcurrentDictionary<string, ProductStats> productStatsDict;
+        private ConcurrentDictionary<string, ProductStats> productStatsDict;   // Dictionary lưu trữ stats của tất cả sản phẩm
         public ConcurrentDictionary<string, ProductStats> ProductStatsDict { get => productStatsDict; set => productStatsDict = value; }
 
         public KPIEngine()

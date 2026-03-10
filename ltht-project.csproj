@@ -90,7 +90,6 @@
     <Compile Include="Infrastructure\FileWatcherService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.md" />
     <None Include="App.config" />
     <None Include="data\invoices\invoices.20260103_02.json" />
     <None Include="data\invoices\invoices_20260103_01.json" />
@@ -104,7 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include=".gitignore" />
-    <Content Include="assets\UML.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />

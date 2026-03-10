@@ -4,8 +4,11 @@ namespace ltht_project.Infrastructure
 {
     internal class FileDetectedEventArgs : EventArgs
     {
-        public string FilePath { get; }
-        public DateTime DetectedTime { get; }
+        private string filePath;   // Đường dẫn của file được phát hiện
+        private DateTime detectedTime;   // Thời gian phát hiện file
+
+        public string FilePath { get => filePath; set => filePath = value; }
+        public DateTime DetectedTime { get => detectedTime; set => detectedTime = value; }
         public FileDetectedEventArgs(string filePath)
         {
             FilePath = filePath;

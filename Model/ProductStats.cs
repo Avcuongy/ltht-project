@@ -8,12 +8,12 @@ namespace ltht_project.Model
 {
     internal class ProductStats
     {
-        private string productId;
-        private int totalPurchasedQuantity;
-        private int totalSoldQuantity;
-        private decimal totalPurchaseCost;
-        private List<DateTime> salesDates;
-        private List<PurchaseOrder> purchaseHistory;
+        private string productId;   // Mã sản phẩm
+        private int totalPurchasedQuantity;   // Tổng số lượng đã nhập
+        private int totalSoldQuantity;   // Tổng số lượng đã bán
+        private decimal totalPurchaseCost;   // Tổng chi phí nhập hàng
+        private List<DateTime> salesDates;   // Danh sách ngày có bán hàng
+        private List<PurchaseOrder> purchaseHistory;   // Lịch sử nhập hàng
 
         public ProductStats(string productId)
         {

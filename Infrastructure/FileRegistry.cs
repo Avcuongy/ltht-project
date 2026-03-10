@@ -16,9 +16,9 @@ namespace ltht_project.Infrastructure
     }
     internal class FileRegistry
     {
-        private readonly string registryFilePath;
-        private readonly ConcurrentDictionary<string, FileProcessingRecord> processedFiles;
-        private readonly object fileLock = new object();
+        private readonly string registryFilePath;   // Đường dẫn đến file registry
+        private readonly ConcurrentDictionary<string, FileProcessingRecord> processedFiles;   // Lưu trữ thông tin về các file đã xử lý
+        private readonly object fileLock = new object();   // Đối tượng khóa để đồng bộ hóa truy cập file registry
 
         public FileRegistry(string registryPath = "file-registry.json")
         {

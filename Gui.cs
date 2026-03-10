@@ -9,17 +9,17 @@ namespace ltht_project.Gui
 {
     internal class GuiManager
     {
-        private readonly KPIEngine kpiEngine;
-        private readonly FileRegistry fileRegistry;
-        private readonly BackgroundWorker backgroundWorker;
-        private readonly FileWatcherService fileWatcher;
-        private readonly List<string> liveLogs;
-        private readonly object logLock = new object();
-        private bool isRunning;
-        private DateTime startTime;
-        private const int CONSOLE_WIDTH = 120;
-        private const int MAX_LOGS = 5;
-        private const int INDENT = 10;
+        private readonly KPIEngine kpiEngine;   // Tham chiếu đến KPIEngine để lấy dữ liệu và tính toán
+        private readonly FileRegistry fileRegistry;   // Tham chiếu đến FileRegistry để hiển thị trạng thái file đã xử lý
+        private readonly BackgroundWorker backgroundWorker;   // Tham chiếu đến BackgroundWorker để hiển thị trạng thái hàng đợi
+        private readonly FileWatcherService fileWatcher;   // Tham chiếu đến FileWatcherService để nhận sự kiện phát hiện file mới
+        private readonly List<string> liveLogs;   // Danh sách lưu trữ các log hoạt động gần đây để hiển thị trên dashboard
+        private readonly object logLock = new object();   // Lock để đồng bộ truy cập vào liveLogs khi có nhiều thread ghi log cùng lúc
+        private bool isRunning;   // Biến để kiểm soát vòng lặp chính của GUI
+        private DateTime startTime;   // Thời điểm bắt đầu chạy ứng dụng, dùng để tính uptime
+        private const int CONSOLE_WIDTH = 120;   // Độ rộng cố định của console để căn chỉnh giao diện
+        private const int MAX_LOGS = 5;   // Số lượng log tối đa hiển thị trên dashboard, log cũ sẽ bị loại bỏ khi vượt quá
+        private const int INDENT = 10;   // Số khoảng trắng để thụt lề khi hiển thị nội dung chính, giúp giao diện gọn gàng hơn
 
         public GuiManager(KPIEngine engine, FileRegistry registry, BackgroundWorker worker, FileWatcherService watcher)
         {
@@ -30,7 +30,6 @@ namespace ltht_project.Gui
             liveLogs = new List<string>();
             isRunning = true;
             startTime = DateTime.Now;
-
             fileWatcher.FileDetected += OnFileDetected;
         }
 

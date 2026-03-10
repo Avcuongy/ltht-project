@@ -6,11 +6,12 @@ namespace ltht_project.Model
 {
     internal class Invoice
     {
-        private string invoiceId;
-        private string productId;
-        private int quantity;
-        private decimal unitSellingPrice;
-        private DateTime invoiceDate;
+        private string invoiceId;   // Mã hóa đơn
+        private string productId;   // Mã sản phẩm
+        private int quantity;   // Số lượng bán
+        private decimal unitSellingPrice;   // Đơn giá bán
+        private DateTime invoiceDate;   // Ngày bán hàng
+
         [JsonConstructor]
         public Invoice(string invoiceId, string productId, int quantity, decimal unitSellingPrice, DateTime invoiceDate)
         {

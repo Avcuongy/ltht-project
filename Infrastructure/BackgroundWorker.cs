@@ -15,14 +15,14 @@ namespace ltht_project.Infrastructure
 {
     internal class BackgroundWorker
     {
-        private readonly FileWatcherService fileWatcher;
-        private readonly FileRegistry fileRegistry;
-        private readonly KPIEngine kpiEngine;
-        private readonly CancellationTokenSource cancellationTokenSource;
-        private readonly List<Task> workerTasks;
-        private readonly int workerCount;
-        private bool isRunning;
-        public event EventHandler<FileProcessedEventArgs> FileProcessed;
+        private readonly FileWatcherService fileWatcher;   // Khai báo FileWatcherService để theo dõi thư mục và lấy file mới
+        private readonly FileRegistry fileRegistry;   // Khai báo FileRegistry để quản lý trạng thái của các file đã xử lý
+        private readonly KPIEngine kpiEngine;   // Khai báo KPIEngine để xử lý dữ liệu từ các file và cập nhật KPI
+        private readonly CancellationTokenSource cancellationTokenSource;   // Khai báo CancellationTokenSource để quản lý việc dừng các tác vụ nền một cách an toàn
+        private readonly List<Task> workerTasks;   // Khai báo một danh sách các tác vụ nền để theo dõi và quản lý chúng
+        private readonly int workerCount;   // Khai báo số lượng tác vụ nền sẽ chạy song song để xử lý các file một cách hiệu quả
+        private bool isRunning;   // Biến để theo dõi trạng thái hoạt động của BackgroundWorker
+        public event EventHandler<FileProcessedEventArgs> FileProcessed;   // Sự kiện để thông báo khi một file đã được xử lý xong
 
         public BackgroundWorker(FileWatcherService watcher, FileRegistry registry, KPIEngine engine, int workerCount = 2)
         {

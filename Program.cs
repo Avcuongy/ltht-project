@@ -19,7 +19,7 @@ namespace ltht_project
             Console.SetWindowSize(Math.Min(120, Console.LargestWindowWidth), Math.Min(40, Console.LargestWindowHeight));
             Console.Title = "Inventory KPI System";
 
-            // Init paths
+            // Khởi tạo paths
             string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\"));
             string invoicesPath = Path.Combine(projectRoot, "data", "invoices");
             string purchaseOrdersPath = Path.Combine(projectRoot, "data", "purchase-orders");
@@ -27,7 +27,7 @@ namespace ltht_project
             var fileRegistry = new FileRegistry("file-registry.json");
             var kpiEngine = new KPIEngine();
 
-            // Load existing data from directories
+            // Load data có sẵn
             LoadExistingData(kpiEngine, invoicesPath, purchaseOrdersPath);
 
             var fileWatcher = new FileWatcherService(fileRegistry);
@@ -37,7 +37,7 @@ namespace ltht_project
             fileWatcher.AddWatchDirectory(invoicesPath, "*.json");
             fileWatcher.AddWatchDirectory(purchaseOrdersPath, "*.json");
 
-            // GUI Manager
+            // GUI manager
             var guiManager = new GuiManager(kpiEngine, fileRegistry, backgroundWorker, fileWatcher);
 
             // Event: File detected

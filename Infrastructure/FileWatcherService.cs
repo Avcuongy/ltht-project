@@ -8,11 +8,11 @@ namespace ltht_project.Infrastructure
 {
     internal class FileWatcherService
     {
-        private readonly List<FileSystemWatcher> watchers;
-        private readonly ConcurrentQueue<string> fileQueue;
-        private readonly FileRegistry fileRegistry;
-        private bool isRunning;
-        public event EventHandler<FileDetectedEventArgs> FileDetected;
+        private readonly List<FileSystemWatcher> watchers;   // Danh sách watchers
+        private readonly ConcurrentQueue<string> fileQueue;   // Hàng đợi file path
+        private readonly FileRegistry fileRegistry;   // Tracking processed files
+        private bool isRunning;   // Trạng thái hoạt động
+        public event EventHandler<FileDetectedEventArgs> FileDetected;  // Event notification
 
         public FileWatcherService(FileRegistry registry)
         {
