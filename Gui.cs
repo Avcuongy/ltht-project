@@ -21,6 +21,10 @@ namespace ltht_project.Gui
         private const int MAX_LOGS = 5;   // Số lượng log tối đa hiển thị trên dashboard, log cũ sẽ bị loại bỏ khi vượt quá
         private const int INDENT = 10;   // Số khoảng trắng để thụt lề khi hiển thị nội dung chính, giúp giao diện gọn gàng hơn
 
+        // Paging state for details page
+        private int detailsCurrentPage = 0;
+        private const int DETAILS_PAGE_SIZE = 15;
+
         public GuiManager(KPIEngine engine, FileRegistry registry, BackgroundWorker worker, FileWatcherService watcher)
         {
             kpiEngine = engine;
@@ -55,18 +59,35 @@ namespace ltht_project.Gui
         {
             Console.CursorVisible = false;
 
+            // vẽ lần đầu
+            Console.Clear();
+            ShowDashboard();
+            var lastRender = DateTime.Now;
+
             while (isRunning)
             {
-                Console.Clear();
-                ShowDashboard();
-
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey(true);
                     await HandleKeyPress(key);
+
+                    // Sau khi xử lý phím, vẽ lại dashboard
+                    Console.Clear();
+                    ShowDashboard();
+                    lastRender = DateTime.Now;
+                }
+                else
+                {
+                    // auto-refresh mỗi 2 giây để cập nhật
+                    if ((DateTime.Now - lastRender).TotalSeconds >= 2)
+                    {
+                        Console.Clear();
+                        ShowDashboard();
+                        lastRender = DateTime.Now;
+                    }
                 }
 
-                await Task.Delay(500);
+                await Task.Delay(50); // delay nhỏ để CPU không bị 100%
             }
 
             Console.CursorVisible = true;
@@ -77,10 +98,11 @@ namespace ltht_project.Gui
             switch (key.Key)
             {
                 case ConsoleKey.F1:
+                    // stay on dashboard
                     break;
 
                 case ConsoleKey.F2:
-                    ShowDetailsPage();
+                    await ShowDetailsPageAsync();
                     break;
 
                 case ConsoleKey.F3:
@@ -140,73 +162,103 @@ namespace ltht_project.Gui
             DrawFooter("| [F1] Dashboard | [F2] Chi Tiết | [F3] Nhật Ký Hệ Thống | [E] Xuất Report | [Q] Thoát |");
         }
 
-        public void ShowDetailsPage()
+        public async Task ShowDetailsPageAsync()
         {
-            Console.Clear();
-            DrawHeader("BẢNG CHI TIẾT THEO MÃ SKU");
-
-            Console.WriteLine();
-
             var stats = kpiEngine.GetProductStats().OrderBy(p => p.Key).ToList();
+            detailsCurrentPage = 0;
 
-            if (stats.Count == 0)
+            while (true)
             {
-                WriteMidText("Chưa có dữ liệu sản phẩm");
-            }
-            else
-            {
-                string headerRow = String.Format("{0,-20} {1,15} {2,15} {3,20} {4,15}",
-                    "Product ID", "Tồn kho", "Giá vốn TB", "Giá trị tồn", "Tuổi kho");
-                WriteMidText(headerRow);
-                WriteMidText(new string('-', headerRow.Length));
+                Console.Clear();
+                DrawHeader("BẢNG CHI TIẾT THEO MÃ SKU");
+                Console.WriteLine();
 
-                int displayCount = 0;
-                int pageSize = 15;
-                int currentPage = 0;
-
-                for (int i = currentPage * pageSize; i < Math.Min((currentPage + 1) * pageSize, stats.Count); i++)
+                if (stats.Count == 0)
                 {
-                    var product = stats[i];
-                    var ps = product.Value;
+                    WriteMidText("Chưa có dữ liệu sản phẩm");
+                }
+                else
+                {
+                    string headerRow = String.Format("{0,-20} {1,15} {2,15} {3,20} {4,15}",
+                        "Product ID", "Tồn kho", "Giá vốn TB", "Giá trị tồn", "Tuổi kho");
+                    WriteMidText(headerRow);
+                    WriteMidText(new string('-', headerRow.Length));
 
-                    decimal avgCost = 0;
-                    decimal stockValue = 0;
-                    double avgAge = 0;
+                    int start = detailsCurrentPage * DETAILS_PAGE_SIZE;
+                    int end = Math.Min(start + DETAILS_PAGE_SIZE, stats.Count);
+                    int displayCount = 0;
 
-                    if (ps.TotalPurchasedQuantity > 0)
+                    for (int i = start; i < end; i++)
                     {
-                        avgCost = ps.TotalPurchaseCost / ps.TotalPurchasedQuantity;
-                        if (ps.CurrentStock > 0)
-                        {
-                            stockValue = ps.CurrentStock * avgCost;
+                        var product = stats[i];
+                        var ps = product.Value;
 
-                            if (ps.PurchaseHistory.Any())
+                        decimal avgCost = 0;
+                        decimal stockValue = 0;
+                        double avgAge = 0;
+
+                        if (ps.TotalPurchasedQuantity > 0)
+                        {
+                            avgCost = ps.TotalPurchaseCost / ps.TotalPurchasedQuantity;
+                            if (ps.CurrentStock > 0)
                             {
-                                var oldestPurchase = ps.PurchaseHistory.OrderBy(p => p.PurchaseDate).First();
-                                avgAge = (DateTime.Now - oldestPurchase.PurchaseDate).TotalDays;
+                                stockValue = ps.CurrentStock * avgCost;
+
+                                if (ps.PurchaseHistory.Any())
+                                {
+                                    var oldestPurchase = ps.PurchaseHistory.OrderBy(p => p.PurchaseDate).First();
+                                    avgAge = (DateTime.Now - oldestPurchase.PurchaseDate).TotalDays;
+                                }
                             }
                         }
+
+                        string row = String.Format("{0,-20} {1,15} {2,15:N2} {3,20:N2} {4,15}",
+                            ps.ProductId.Length > 20 ? ps.ProductId.Substring(0, 17) + "..." : ps.ProductId,
+                            ps.CurrentStock,
+                            avgCost,
+                            stockValue,
+                            ps.CurrentStock > 0 ? $"{avgAge:F0} ngày" : "0 ngày");
+
+                        WriteMidText(row);
+                        displayCount++;
                     }
 
-                    string row = String.Format("{0,-20} {1,15} {2,15:N2} {3,20:N2} {4,15}",
-                        ps.ProductId.Length > 20 ? ps.ProductId.Substring(0, 17) + "..." : ps.ProductId,
-                        ps.CurrentStock,
-                        avgCost,
-                        stockValue,
-                        ps.CurrentStock > 0 ? $"{avgAge:F0} ngày" : "0 ngày");
-
-                    WriteMidText(row);
-                    displayCount++;
+                    Console.WriteLine();
+                    int totalPages = (stats.Count + DETAILS_PAGE_SIZE - 1) / DETAILS_PAGE_SIZE;
+                    WriteMidText($"Trang {detailsCurrentPage + 1}/{totalPages} - Hiển thị {displayCount} / {stats.Count} sản phẩm");
                 }
 
                 Console.WriteLine();
-                WriteMidText($"Hiển thị {displayCount} / {stats.Count} sản phẩm");
+                DrawFooter("| [↑/↓] Trang trước/sau | [B] Quay lại |");
+
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.B || key.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else if (key.Key == ConsoleKey.UpArrow)
+                {
+                    if (detailsCurrentPage > 0)
+                    {
+                        detailsCurrentPage--;
+                    }
+                }
+                else if (key.Key == ConsoleKey.DownArrow)
+                {
+                    int maxPage = (stats.Count + DETAILS_PAGE_SIZE - 1) / DETAILS_PAGE_SIZE - 1;
+                    if (detailsCurrentPage < maxPage)
+                    {
+                        detailsCurrentPage++;
+                    }
+                }
             }
+        }
 
-            Console.WriteLine();
-            DrawFooter("| [B] Quay lại |");
-
-            WaitForBackKey();
+        public void ShowDetailsPage()
+        {
+            // kept for compatibility but not used anymore
+            // redirect to async version
+            ShowDetailsPageAsync().GetAwaiter().GetResult();
         }
 
         public void ShowSystemLogPage()
