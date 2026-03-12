@@ -91,9 +91,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="data\invoices\invoices.20260103_02.json" />
-    <None Include="data\invoices\invoices_20260103_01.json" />
-    <None Include="data\purchase-orders\purchaseOrders_20260103_01.json" />
     <None Include="gui.md" />
     <None Include="output\.gitkeep" />
     <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
@@ -107,6 +104,8 @@
   <ItemGroup>
     <Folder Include="bin\Debug\" />
     <Folder Include="bin\Release\" />
+    <Folder Include="data\invoices\" />
+    <Folder Include="data\purchase-orders\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

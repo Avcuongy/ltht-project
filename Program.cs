@@ -77,6 +77,12 @@ namespace ltht_project
 
         private static void LoadExistingData(KPIEngine kpiEngine, string invoicesPath, string purchaseOrdersPath)
         {
+            // Configure JsonSerializerOptions to be case-insensitive
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true  // Accept any case
+            };
+
             try
             {
                 // Load Purchase Orders
@@ -88,18 +94,21 @@ namespace ltht_project
                         try
                         {
                             string json = File.ReadAllText(file);
-                            var orders = JsonSerializer.Deserialize<List<PurchaseOrder>>(json);
+                            var orders = JsonSerializer.Deserialize<List<PurchaseOrder>>(json, options);
                             if (orders != null)
                             {
                                 foreach (var order in orders)
                                 {
-                                    kpiEngine.ProcessPurchaseOrder(order);
+                                    if (order != null && !string.IsNullOrWhiteSpace(order.ProductId))
+                                    {
+                                        kpiEngine.ProcessPurchaseOrder(order);
+                                    }
                                 }
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // Skip invalid files
+                            Console.WriteLine($"[WARNING] Failed to load {Path.GetFileName(file)}: {ex.Message}");
                         }
                     }
                 }
@@ -113,25 +122,28 @@ namespace ltht_project
                         try
                         {
                             string json = File.ReadAllText(file);
-                            var invoices = JsonSerializer.Deserialize<List<Invoice>>(json);
+                            var invoices = JsonSerializer.Deserialize<List<Invoice>>(json, options);
                             if (invoices != null)
                             {
                                 foreach (var invoice in invoices)
                                 {
-                                    kpiEngine.ProcessInvoice(invoice);
+                                    if (invoice != null && !string.IsNullOrWhiteSpace(invoice.ProductId))
+                                    {
+                                        kpiEngine.ProcessInvoice(invoice);
+                                    }
                                 }
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            // Skip invalid files
+                            Console.WriteLine($"[WARNING] Failed to load {Path.GetFileName(file)}: {ex.Message}");
                         }
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignore errors during initial load
+                Console.WriteLine($"[ERROR] Failed to load existing data: {ex.Message}");
             }
         }
     }

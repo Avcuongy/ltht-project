@@ -24,6 +24,12 @@ namespace ltht_project.Infrastructure
         private bool isRunning;   // Biến để theo dõi trạng thái hoạt động của BackgroundWorker
         public event EventHandler<FileProcessedEventArgs> FileProcessed;   // Sự kiện để thông báo khi một file đã được xử lý xong
 
+        // Use shared JsonSerializerOptions so JSON property names are treated case-insensitively
+        private static readonly JsonSerializerOptions JsonOptions = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
         public BackgroundWorker(FileWatcherService watcher, FileRegistry registry, KPIEngine engine, int workerCount = 2)
         {
             fileWatcher = watcher;
@@ -167,7 +173,7 @@ namespace ltht_project.Infrastructure
         {
             return await Task.Run(() =>
             {
-                var invoices = JsonSerializer.Deserialize<List<Invoice>>(json);
+                var invoices = JsonSerializer.Deserialize<List<Invoice>>(json, JsonOptions);
 
                 if (invoices == null || invoices.Count == 0)
                 {
@@ -176,7 +182,7 @@ namespace ltht_project.Infrastructure
 
                 foreach (var invoice in invoices)
                 {
-                    if (invoice != null)
+                    if (invoice != null && !string.IsNullOrWhiteSpace(invoice.ProductId))
                     {
                         kpiEngine.ProcessInvoice(invoice);
                     }
@@ -190,7 +196,7 @@ namespace ltht_project.Infrastructure
         {
             return await Task.Run(() =>
             {
-                var orders = JsonSerializer.Deserialize<List<PurchaseOrder>>(json);
+                var orders = JsonSerializer.Deserialize<List<PurchaseOrder>>(json, JsonOptions);
 
                 if (orders == null || orders.Count == 0)
                 {
@@ -199,7 +205,7 @@ namespace ltht_project.Infrastructure
 
                 foreach (var order in orders)
                 {
-                    if (order != null)
+                    if (order != null && !string.IsNullOrWhiteSpace(order.ProductId))
                     {
                         kpiEngine.ProcessPurchaseOrder(order);
                     }

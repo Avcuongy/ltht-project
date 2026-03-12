@@ -21,7 +21,17 @@ namespace ltht_project.Engine
 
         public void ProcessPurchaseOrder(PurchaseOrder order)
         {
-            var stats = ProductStatsDict.GetOrAdd(order.ProductId, new ProductStats(order.ProductId));
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            if (string.IsNullOrWhiteSpace(order.ProductId))
+            {
+                throw new ArgumentException("PurchaseOrder.ProductId cannot be null or empty.", nameof(order));
+            }
+
+            var stats = ProductStatsDict.GetOrAdd(order.ProductId, id => new ProductStats(id));
 
             lock (stats)
             {
@@ -33,7 +43,17 @@ namespace ltht_project.Engine
 
         public void ProcessInvoice(Invoice invoice)
         {
-            var stats = ProductStatsDict.GetOrAdd(invoice.ProductId, new ProductStats(invoice.ProductId));
+            if (invoice == null)
+            {
+                throw new ArgumentNullException(nameof(invoice));
+            }
+
+            if (string.IsNullOrWhiteSpace(invoice.ProductId))
+            {
+                throw new ArgumentException("Invoice.ProductId cannot be null or empty.", nameof(invoice));
+            }
+
+            var stats = ProductStatsDict.GetOrAdd(invoice.ProductId, id => new ProductStats(id));
 
             lock (stats)
             {
@@ -118,7 +138,10 @@ namespace ltht_project.Engine
 
                 foreach (var purchase in sortedPurchases)
                 {
-                    if (remainingUnsold <= 0) break;
+                    if (remainingUnsold <= 0)
+                    {
+                        break;
+                    }
 
                     int quantityFromThisPurchase = Math.Min(remainingUnsold, purchase.Quantity);
                     double ageInDays = (currentDate - purchase.PurchaseDate).TotalDays;
